@@ -1,0 +1,79 @@
+pipeline {
+    agent any
+    
+    parameters {
+        // String parameter for project name
+        string(
+            name: 'NAME',
+            defaultValue: 'LambdaTest',
+            description: 'Please tell me your name?'
+        )
+        
+        // Multiline text parameter for detailed description
+        text(
+            name: 'DESC',
+            defaultValue: 'Performing Live Interactive and Automated Cross Browser Testing on\n2000+ Real Browsers and Operating Systems Online',
+            description: 'Describe about the job details'
+        )
+        
+        // Boolean parameter for test execution control
+        booleanParam(
+            name: 'SKIP_TEST',
+            defaultValue: false,
+            description: 'Want to skip running Test cases?'
+        )
+        
+        // Choice parameter for branch selection
+        choice(
+            name: 'BRANCH',
+            choices: ['Master', 'Dev'],
+            description: 'Choose the branch'
+        )
+        
+        // Password parameter for sensitive data
+        password(
+            name: 'SONAR_SERVER_PWD',
+            defaultValue: '',
+            description: 'Enter SONAR password'
+        )
+    }
+    
+    stages {
+        stage('Build') {
+            steps {
+                echo "Project Name: ${params.NAME}"
+                echo "Description: ${params.DESC}"
+                echo "Branch: ${params.BRANCH}"
+            }
+        }
+        
+        stage('Test') {
+            when {
+                expression { !params.SKIP_TEST }
+            }
+            steps {
+                echo "Running tests on ${params.BRANCH} branch"
+                // Add your test commands here
+            }
+        }
+        
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    // Using the password parameter securely
+                    withSonarQubeEnv('SonarQube') {
+                        // Your SonarQube analysis commands here
+                        echo "Running SonarQube analysis"
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                echo "Deploying to ${params.BRANCH} environment"
+                // Add your deployment commands here
+            }
+        }
+    }
+}
