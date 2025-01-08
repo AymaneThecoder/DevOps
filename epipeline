@@ -37,7 +37,9 @@ pipeline {
             description: 'Enter SONAR password'
         )
     }
-    stage('BUILD') {
+    
+    stages {
+        stage('BUILD') {
             steps {
                 echo 'Developpement'
             }
@@ -52,8 +54,5 @@ pipeline {
                 echo 'Mise en Production'
             }
         }
-    }
-}
-   
     }
 }
