@@ -37,43 +37,23 @@ pipeline {
             description: 'Enter SONAR password'
         )
     }
-    
-    stages {
-        stage('Build') {
+    stage('BUILD') {
             steps {
-                echo "Project Name: ${params.NAME}"
-                echo "Description: ${params.DESC}"
-                echo "Branch: ${params.BRANCH}"
+                echo 'Developpement'
             }
         }
-        
         stage('Test') {
-            when {
-                expression { !params.SKIP_TEST }
-            }
             steps {
-                echo "Running tests on ${params.BRANCH} branch"
-                // Add your test commands here
+                echo 'Testing'
             }
         }
-        
-        stage('SonarQube Analysis') {
+        stage('DEPLOY') {
             steps {
-                script {
-                    // Using the password parameter securely
-                    withSonarQubeEnv('SonarQube') {
-                        // Your SonarQube analysis commands here
-                        echo "Running SonarQube analysis"
-                    }
-                }
+                echo 'Mise en Production'
             }
         }
-        
-        stage('Deploy') {
-            steps {
-                echo "Deploying to ${params.BRANCH} environment"
-                // Add your deployment commands here
-            }
-        }
+    }
+}
+   
     }
 }
